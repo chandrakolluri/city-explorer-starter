@@ -1,2 +1,2 @@
-# lab-06-repository
+# City explorer starter
 Lab 06: Node, npm, and Express
