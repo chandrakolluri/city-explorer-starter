@@ -20,18 +20,39 @@ app.get('/location', (request, response) => {
     response.send(locationData);
 });
 
+app.get('/weather', (request, response) => {
+    //get weather data from darksky.json file
+    const weatherData = searchForWeather();
+    response.send(weatherData);
+});
+
+function searchForWeather() {
+    const darkskyData = require('./data/darksky.json');
+    var wdata = [];
+    darkskyData.daily.data.forEach(element => {
+        wdata.push(new Weather(element));
+    });
+    return wdata;
+}
+
 function searchToLatLong(query) {
     const geoData = require('./data/geo.json');
-    const location = new Location(geoData.results[0]);
+    const location = new GetLocation(geoData.results[0]);
     location.search_query = query;
     return location;
 }
 
-function Location(data) {
+function GetLocation(data) {
     this.formatted_query = data.formatted_address;
     this.latitude = data.geometry.location.lat;
     this.longitude = data.geometry.location.lng;
 }
+
+function Weather(data) {
+    this.forecast = data.summary;
+    this.time = data.time;
+}
+
 
 app.listen(PORT, () => {
     console.log('Lab06 assignment');
